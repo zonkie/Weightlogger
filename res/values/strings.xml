@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, WeightLoggerActivity!</string>
+    <string name="app_name">WeightLogger</string>
+    <string name="exit">Exit</string>
+    <string name="weight">Weight</string>
+    <string name="Bodyfat">Body Fat</string>
+    <string name="BodyWater">Body Water</string>
+    <string name="BodyBone">Body Bonemass</string>
+    
+    <string name="add">Add</string>
+    <string name="showAll">Show All</string>
+    <string name="graph">Graph</string>
+
+</resources>

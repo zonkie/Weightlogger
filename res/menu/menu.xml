@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/optShowGraph" android:title="@string/graph" />
+    <item android:id="@+id/optShowAll" android:title="@string/showAll" />
+    <item android:id="@+id/optExit" android:title="@string/exit" />
+    
+
+</menu>
