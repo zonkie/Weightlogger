@@ -14,8 +14,8 @@ public class DBAdapter {
 	public static final String KEY_DATE = "date";
 	public static final String KEY_VALUE = "value";
 	public static final String KEY_BODYFAT = "bodyfat";
-	private static final String KEY_BODYBONE = "bodybonemass";
-	private static final String KEY_BODYWATER = "bodywater";
+	public static final String KEY_BODYBONE = "bodybonemass";
+	public static final String KEY_BODYWATER = "bodywater";
 	
 	private static final String TAG = "DBAdapter";
 
@@ -160,10 +160,30 @@ public class DBAdapter {
 
 	}
 	
+	
+
 	public Cursor getWeightValues() {
 		Log.d("test", "Reading Data");
 		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_VALUE + " AS " + KEY_VALUE + " FROM " + DATABASE_TABLE, null);
 	}
+	public Cursor getBodyfatValues() {
+		Log.d("test", "Reading Data");
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYFAT + " AS " + KEY_BODYFAT + " FROM " + DATABASE_TABLE, null);
+	}
+	public Cursor getBodywaterValues() {
+		Log.d("test", "Reading Data");
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYWATER + " AS " + KEY_BODYWATER + " FROM " + DATABASE_TABLE, null);
+	}
+	public Cursor getBodybonemassValues() {
+		Log.d("test", "Reading Data");
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYBONE + " AS " + KEY_BODYBONE + " FROM " + DATABASE_TABLE, null);
+	}
+	
+	
+	
+	
+	
+	
 	public Cursor getList() {
 		Log.d("test", "Reading Data");
 		return db.rawQuery("SELECT " + KEY_ROWID + ","
