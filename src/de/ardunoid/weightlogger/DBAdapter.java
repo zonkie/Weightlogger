@@ -164,19 +164,19 @@ public class DBAdapter {
 
 	public Cursor getWeightValues() {
 		Log.d("test", "Reading Data");
-		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_VALUE + " AS " + KEY_VALUE + " FROM " + DATABASE_TABLE, null);
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_VALUE + " AS " + KEY_VALUE + " FROM " + DATABASE_TABLE+" WHERE " + KEY_VALUE +">0 LIMIT 10", null);
 	}
 	public Cursor getBodyfatValues() {
 		Log.d("test", "Reading Data");
-		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYFAT + " AS " + KEY_BODYFAT + " FROM " + DATABASE_TABLE, null);
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYFAT + " AS " + KEY_BODYFAT + " FROM " + DATABASE_TABLE+" WHERE " + KEY_BODYFAT +">0 LIMIT 10", null);
 	}
 	public Cursor getBodywaterValues() {
 		Log.d("test", "Reading Data");
-		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYWATER + " AS " + KEY_BODYWATER + " FROM " + DATABASE_TABLE, null);
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYWATER + " AS " + KEY_BODYWATER + " FROM " + DATABASE_TABLE +" WHERE " + KEY_BODYWATER +">0 LIMIT 10", null);
 	}
 	public Cursor getBodybonemassValues() {
 		Log.d("test", "Reading Data");
-		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYBONE + " AS " + KEY_BODYBONE + " FROM " + DATABASE_TABLE, null);
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYBONE + " AS " + KEY_BODYBONE + " FROM " + DATABASE_TABLE+" WHERE " + KEY_BODYBONE +">0 LIMIT 10", null);
 	}
 	
 	
