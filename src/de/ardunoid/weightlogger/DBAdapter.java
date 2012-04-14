@@ -16,12 +16,13 @@ public class DBAdapter {
 	public static final String KEY_BODYFAT = "bodyfat";
 	public static final String KEY_BODYBONE = "bodybonemass";
 	public static final String KEY_BODYWATER = "bodywater";
+	public static final String KEY_BMI = "bmi";
 	
 	private static final String TAG = "DBAdapter";
 
 	private static final String DATABASE_NAME = "weightlogger";
 	private static final String DATABASE_TABLE = "weight";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 	
 
 	private static final String DATABASE_CREATE = "CREATE TABLE "
@@ -30,12 +31,13 @@ public class DBAdapter {
 		+ KEY_DATE + " TEXT NOT NULL,"
 		+ KEY_BODYWATER + " TEXT NOT NULL,"
 		+ KEY_BODYBONE + " TEXT NOT NULL,"
-		+ KEY_BODYFAT + " TEXT NOT NULL" + ")";
+		+ KEY_BODYFAT + " TEXT NOT NULL,"
+		+ KEY_BMI + " TEXT NOT NULL" + ")";
 	
 	private static final String DATABASE_UPDATE_ONE_TO_TWO = "ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN " + KEY_BODYFAT + " TEXT" + "";
 	private static final String DATABASE_UPDATE_TO_FOUR_pt1 = "ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN " + KEY_BODYWATER + " TEXT";
 	private static final String DATABASE_UPDATE_TO_FOUR_pt2 = "ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN " + KEY_BODYBONE +" TEXT";
-
+	private static final String DATABASE_UPDATE_TO_FIVE = "ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN " + KEY_BMI +" TEXT";
 	private final Context context;
 
 	private DatabaseHelper DBHelper;
@@ -68,10 +70,15 @@ public class DBAdapter {
 				db.execSQL(DATABASE_UPDATE_ONE_TO_TWO);
 				oldVersion=2;
 			}
-			if(oldVersion<=3){
+			if(oldVersion==2 || oldVersion==3){
 				Log.d("test","Updating DB to version 4");
 				db.execSQL(DATABASE_UPDATE_TO_FOUR_pt1);
 				db.execSQL(DATABASE_UPDATE_TO_FOUR_pt2);
+				oldVersion = 4;
+			}
+			if(oldVersion==4){
+				Log.d("test","Updating DB to version 5");
+				db.execSQL(DATABASE_UPDATE_TO_FIVE);
 			}
 		}
 	}
@@ -88,7 +95,7 @@ public class DBAdapter {
 	}
 
 	// ---insert an Entry into the database---
-	public long insertWeight(String Date, String Value, String Bodyfat, String Bodywater, String Bodybone) {
+	public long insertWeight(String Date, String Value, String Bodyfat, String Bodywater, String Bodybone, String bmi) {
 		long retval;
 		try {
 			Log.d("Soenke", "insertWeight");
@@ -98,6 +105,7 @@ public class DBAdapter {
 			initialValues.put(KEY_BODYFAT, "" + Bodyfat + "");
 			initialValues.put(KEY_BODYWATER, "" + Bodywater + "");
 			initialValues.put(KEY_BODYBONE, "" + Bodybone + "");
+			initialValues.put(KEY_BMI, "" + bmi + "");
 			Log.d("Soenke", "Insert: " + Date + " - " + Value);
 			retval = db.insert(DATABASE_TABLE, null, initialValues);
 		} catch (Exception e) {
@@ -106,7 +114,7 @@ public class DBAdapter {
 		return retval;
 	}
 
-	public long updateWeight(String RowId, String Date, String Value, String Bodyfat, String Bodywater, String Bodybone) {
+	public long updateWeight(String RowId, String Date, String Value, String Bodyfat, String Bodywater, String Bodybone, String bmi) {
 		long retval;
 		try {
 			Log.d("Soenke", "updateExpense");
@@ -116,6 +124,7 @@ public class DBAdapter {
 			updateValues.put(KEY_BODYFAT, "" + Bodyfat + "");
 			updateValues.put(KEY_BODYWATER, "" + Bodywater + "");
 			updateValues.put(KEY_BODYBONE, "" + Bodybone + "");
+			updateValues.put(KEY_BMI, "" + bmi + "");
 			Log.d("Soenke", "Update: " + Date + " - " + Value);
 			retval = db.update(DATABASE_TABLE, updateValues, KEY_ROWID + "="
 					+ Integer.parseInt(RowId), null);
@@ -164,19 +173,23 @@ public class DBAdapter {
 
 	public Cursor getWeightValues() {
 		Log.d("test", "Reading Data");
-		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_VALUE + " AS " + KEY_VALUE + " FROM " + DATABASE_TABLE+" WHERE " + KEY_VALUE +">0 LIMIT 10", null);
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_VALUE + " AS " + KEY_VALUE + " FROM " + DATABASE_TABLE+" WHERE " + KEY_VALUE +">0 LIMIT 8", null);
 	}
 	public Cursor getBodyfatValues() {
 		Log.d("test", "Reading Data");
-		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYFAT + " AS " + KEY_BODYFAT + " FROM " + DATABASE_TABLE+" WHERE " + KEY_BODYFAT +">0 LIMIT 10", null);
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYFAT + " AS " + KEY_BODYFAT + " FROM " + DATABASE_TABLE+" WHERE " + KEY_BODYFAT +">0 LIMIT 8", null);
 	}
 	public Cursor getBodywaterValues() {
 		Log.d("test", "Reading Data");
-		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYWATER + " AS " + KEY_BODYWATER + " FROM " + DATABASE_TABLE +" WHERE " + KEY_BODYWATER +">0 LIMIT 10", null);
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYWATER + " AS " + KEY_BODYWATER + " FROM " + DATABASE_TABLE +" WHERE " + KEY_BODYWATER +">0 LIMIT 8", null);
 	}
 	public Cursor getBodybonemassValues() {
 		Log.d("test", "Reading Data");
-		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYBONE + " AS " + KEY_BODYBONE + " FROM " + DATABASE_TABLE+" WHERE " + KEY_BODYBONE +">0 LIMIT 10", null);
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BODYBONE + " AS " + KEY_BODYBONE + " FROM " + DATABASE_TABLE+" WHERE " + KEY_BODYBONE +">0 LIMIT 8", null);
+	}
+	public Cursor getBmiValues() {
+		Log.d("test", "Reading Data");
+		return db.rawQuery("SELECT " + KEY_ROWID + "," + KEY_BMI + " AS " + KEY_BMI + " FROM " + DATABASE_TABLE +" WHERE " + KEY_BMI +">0 LIMIT 8", null);
 	}
 	
 	
@@ -191,6 +204,7 @@ public class DBAdapter {
 				+ "|| '|' || 'Fat:' || " + KEY_BODYFAT
 				+ "|| '|' || 'Water:' || " + KEY_BODYWATER
 				+ "|| '|' || 'Bone:' || " + KEY_BODYBONE
+				+ "|| '|' || 'BMI:' || " + KEY_BMI
 				+ " AS " + KEY_VALUE + " FROM " + DATABASE_TABLE, null);
 	}
 

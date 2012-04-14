@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number|numberDecimal" />
-<!--  -->
+
     <Button
         android:id="@+id/btnAdd"
         style="?android:attr/buttonStyleSmall"
@@ -76,5 +76,12 @@
         android:text="@string/add" 
         android:onClick="onClickAddHandler"
         />
+
+    <TextView
+        android:id="@+id/textHeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

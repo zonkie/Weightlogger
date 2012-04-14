@@ -6,25 +6,34 @@ import java.util.Calendar;
 import de.ardunoid.weightlogger.DBAdapter;
 import de.ardunoid.weightlogger.R;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class WeightLoggerActivity extends Activity {
 	DBAdapter db = new DBAdapter(this);
-
+	String height = "";
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		final SharedPreferences einstellungen = preferencesActivity
+				.getPreferences(this);
+
+		height = einstellungen.getString("prefHeight", "0");
+		TextView heightText = (TextView) findViewById(R.id.textHeight);
+		heightText.setText("Height: "+ height);
 	}
 
 	public void onClickAddHandler(final View view) {
@@ -34,8 +43,7 @@ public class WeightLoggerActivity extends Activity {
 			final EditText BodyFat = (EditText) findViewById(R.id.edtBodyfat);
 			final EditText BodyWater = (EditText) findViewById(R.id.edtBodyWater);
 			final EditText BodyBone = (EditText) findViewById(R.id.edtBodyBone);
-			
-			
+			final float bmiCalc = this.calcBmi(Float.valueOf(value.getText().toString()), Float.valueOf(height));
 			Log.d("test", "Adding entry");
 
 			try {
@@ -45,12 +53,10 @@ public class WeightLoggerActivity extends Activity {
 				CharSequence bubbleText = "";
 				db.open();
 				Log.d("test", "insert weight");
-				db.insertWeight(String.valueOf(c.getTime().toString()),
-									value.getText().toString(),
-									BodyFat.getText().toString(),
-									BodyWater.getText().toString(),
-									BodyBone.getText().toString()
-								);
+				db.insertWeight(String.valueOf(c.getTime().toString()), value
+						.getText().toString(), BodyFat.getText().toString(),
+						BodyWater.getText().toString(), BodyBone.getText()
+								.toString(), String.valueOf(bmiCalc));
 				Log.d("test", "Inserted entry");
 				bubbleText = "Ok";
 
@@ -94,19 +100,30 @@ public class WeightLoggerActivity extends Activity {
 		case R.id.optExit:
 			finish();
 			return true;
+
 		case R.id.optShowAll:
 			final Intent intentShowAll = new Intent(this,
 					weightShowActivity.class);
 			startActivity(intentShowAll);
 			return true;
-			
-			 case R.id.optShowGraph: final Intent intentShowGraph = new
-			 Intent(this, MyActivity.class); startActivity(intentShowGraph);
+
+		case R.id.optShowGraph:
+			final Intent intentShowGraph = new Intent(this, MyActivity.class);
+			startActivity(intentShowGraph);
 			return true;
-			
+
+		case R.id.optSettings:
+			final Intent intentShowSettings = new Intent(this, preferencesActivity.class);
+			startActivity(intentShowSettings);
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 
+	}
+	
+	public float calcBmi(float weight, float height){
+		Log.w("test","height: " + String.valueOf(height));
+		return (float) (weight / Math.pow((height/100), 2));
 	}
 }

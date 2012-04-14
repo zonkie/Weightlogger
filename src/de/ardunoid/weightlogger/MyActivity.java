@@ -24,7 +24,7 @@ public class MyActivity extends Activity {
 	private Cursor mBodyfatCursor;
 	private Cursor mBodywaterCursor;
 	private Cursor mBodybonemassCursor;
-
+	private Cursor mBodyBmiCursor;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,6 +80,7 @@ public class MyActivity extends Activity {
 			for (mBodywaterCursor.moveToFirst(); mBodywaterCursor.moveToNext(); mBodywaterCursor.isAfterLast()) {
 				waterGraphData.add(mBodywaterCursor.getInt(mBodywaterCursor.getColumnIndex(de.ardunoid.weightlogger.DBAdapter.KEY_BODYWATER)));
 			}
+
 			// Turn the above arrays into XYSeries:
 			XYSeries bodyWaterSeries = new SimpleXYSeries(waterGraphData,
 					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
@@ -113,16 +114,39 @@ public class MyActivity extends Activity {
 
 			mySimpleXYPlot.addSeries(bodyBoneSeries, bodyBoneSeriesFormat);
 
+			// BMI
+			mBodyBmiCursor = db.getBmiValues();
+			startManagingCursor(mBodyBmiCursor);
+			ArrayList<Number> bmiGraphData = new ArrayList<Number>();
+			for (mBodyBmiCursor.moveToFirst(); mBodyBmiCursor.moveToNext(); mBodyBmiCursor.isAfterLast()) {
+				bmiGraphData.add(mBodyBmiCursor.getInt(mBodyBmiCursor.getColumnIndex(de.ardunoid.weightlogger.DBAdapter.KEY_BMI)));
+			}
 
+			// Turn the above arrays into XYSeries:
+			XYSeries bodyBmiSeries = new SimpleXYSeries(bmiGraphData,
+					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
+					"Water"); 
+
+			LineAndPointFormatter bodyBmiSeriesFormat = new LineAndPointFormatter(
+					Color.rgb(0, 255, 100), // line color
+					Color.rgb(0, 255, 200), // point color
+					null); // fill color (optional)
+
+			mySimpleXYPlot.addSeries(bodyBmiSeries, bodyBmiSeriesFormat);
+
+			
 
 
 			// Reduce the number of range labels
-			mySimpleXYPlot.setTicksPerRangeLabel(3);
+			mySimpleXYPlot.setTicksPerRangeLabel(2);
 
 			mySimpleXYPlot.setDomainLabel("ardunoid.de");
-			mySimpleXYPlot.setBackgroundColor(Color.rgb(10, 10, 10));
-			mySimpleXYPlot.setPlotMarginTop(50);
-			mySimpleXYPlot.setPlotMarginBottom(50);
+			mySimpleXYPlot.setTitle("");
+			mySimpleXYPlot.setGridPadding(10,10,10,10);
+			mySimpleXYPlot.setBackgroundColor(Color.rgb(0,0,0));
+			mySimpleXYPlot.setPlotMarginTop(0);
+			mySimpleXYPlot.setPlotMarginBottom(0);
+			mySimpleXYPlot.setAlpha((float) 0.7);
 			
 			// By default, AndroidPlot displays developer guides to aid in
 			// laying out your plot.
